@@ -10,3 +10,18 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'djomodoro.db'),
     }
 }
+
+INTERNAL_IPS = (
+    "127.0.0.1",
+)
+
+DEV_APPS = (
+    'debug_toolbar',
+)
+
+DEV_MIDDLEWARE = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+INSTALLED_APPS += DEV_APPS
+MIDDLEWARE_CLASSES = DEV_MIDDLEWARE + MIDDLEWARE_CLASSES # DDT first
