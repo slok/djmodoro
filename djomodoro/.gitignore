@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL file
 __pycache__/
 *.py[cod]
 
@@ -46,9 +46,11 @@ coverage.xml
 
 # Django stuff:
 *.log
+*.db
 
 # Sphinx documentation
 docs/_build/
 
 # PyBuilder
 target/
+
