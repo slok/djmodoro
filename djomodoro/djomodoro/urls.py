@@ -2,11 +2,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'djomodoro.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+from tasks import urls as task_urls
 
+urlpatterns = patterns('',
+    url(r'^t/', include(task_urls, namespace="tasks")),
     url(r'^admin/', include(admin.site.urls)),
 )
 
