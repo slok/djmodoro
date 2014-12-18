@@ -16,6 +16,6 @@ Install dependencies:
 
     $ npm install -g bower yuglify
     $ pip install -r requirements/dev.txt
-    $ bower install bower.json
+    $ bower install
 
 
