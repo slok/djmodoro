@@ -21,5 +21,5 @@ class NewTaskView(SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs['task_list'] = Task.objects.annotate(
-                                Count('run')).order_by('id')[:5]
+                                Count('run')).order_by('-id')[:5]
         return super().get_context_data(**kwargs)  # Python3 style super
