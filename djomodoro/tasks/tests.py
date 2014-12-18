@@ -62,6 +62,19 @@ class TaskTestCase(TestCase):
 
         self.assertEqual(Task.objects.count(), 0)
 
+    def test_run_backwards(self):
+        task = Task.objects.get(id=1)
+        Run(task=task, start=timezone.now(),
+            finish=timezone.now() + timedelta(hours=2)).save()
+        Run(task=task, start=timezone.now(),
+            finish=timezone.now() + timedelta(hours=2)).save()
+
+        self.assertEqual(task.run_set.count(), 2)
+
+        # Ensure retrieving again
+        task = Task.objects.get(id=1)
+        self.assertEqual(task.run_set.count(), 2)
+
 
 class RunTestCase(TestCase):
 
