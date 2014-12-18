@@ -38,7 +38,10 @@ DJANGO_APPS = (
     'django.contrib.staticfiles',
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    'pipeline',
+)
+
 LOCAL_APPS = (
     'tasks',
 )
@@ -81,9 +84,41 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
+
+
+# Static files stuf -----------------------------------------------------------
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "pipeline.finders.PipelineFinder",
+)
+
+PIPELINE_CSS = {
+    'libs': {
+        'source_filenames': (
+            'bower/bootstrap/dist/css/bootstrap.css',
+            'bower/bootstrap/dist/css/bootstrap-theme.css'
+        ),
+        'output_filename': 'css/libs.min.css',
+    },
+}
+
+PIPELINE_JS = {
+    'libs': {
+        'source_filenames': (
+            'bower/jquery/dist/jquery.js',
+        ),
+        'output_filename': 'js/libs.min.js',
+    }
+}

@@ -1,8 +1,11 @@
 {# base.html #}
+{% load pipeline %}
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    {% javascript 'libs' %}
+    {% stylesheet 'libs' %}
 {% block head %}
 {% endblock head %}
   </head>
