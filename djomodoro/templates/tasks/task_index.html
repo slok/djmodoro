@@ -1,19 +1,17 @@
 {# tasks/task_index #}
 {% extends "tasks/base_tasks.html" %}
 
+
 {% block container %}
-<div class="row">
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-  <div class="col-md-1">.col-md-1</div>
-</div>
+<h1 id="clock"></h1>
+<script type="text/javascript">
+  var today = new Date();
+  today.setMinutes(today.getMinutes() + 25);
+  $("#clock")
+  .countdown(today, function(event) {
+    $(this).text(
+      event.strftime('%D days %H:%M:%S')
+    );
+  });
+</script>
 {% endblock container %}

@@ -126,6 +126,7 @@ PIPELINE_JS = {
     'libs': {
         'source_filenames': (
             'bower/jquery/dist/jquery.js',
+            'bower/jquery.countdown/dist/jquery.countdown.js'
         ),
         'output_filename': 'js/libs.min.js',
     }
