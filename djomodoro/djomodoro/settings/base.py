@@ -112,6 +112,14 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'css/libs.min.css',
     },
+
+    'djomodoro': {
+        'source_filenames': (
+            'css/style.css',
+        ),
+        'output_filename': 'css/djmodoro.min.css',
+    },
+
 }
 
 PIPELINE_JS = {
