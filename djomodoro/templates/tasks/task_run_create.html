@@ -1,0 +1,45 @@
+{# tasks/task_task_create #}
+{% extends "tasks/base_tasks.html" %}
+{% load i18n %}
+
+{% block container %}
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+    <form action="{% url 'tasks:run_create' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+    </form>
+  </div>
+
+  <div class="col-md-6 col-md-offset-3">
+  <div> {% trans "Last created tasks" %}</div>
+  <table class="table table-striped">
+  <thead>
+        <tr>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Description" %}</th>
+          <th>{% trans "Runs" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for i in task_list %}
+        <tr>
+            <td>{{ i.name }}</td>
+            <td>{{ i.description }}</td>
+            <td>{{ i.run__count }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+ </table>
+ </div>
+</div>
+
+{% endblock container %}

@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Count
 
-from .models import Task
+from .models import Task, Run
 
 
 class IndexView(TemplateView):
@@ -21,5 +21,18 @@ class NewTaskView(SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs['task_list'] = Task.objects.annotate(
-                                Count('run')).order_by('-id')[:5]
+            Count('run')).order_by('-id')[:5]
         return super().get_context_data(**kwargs)  # Python3 style super
+
+
+class NewRunView(SuccessMessageMixin, CreateView):
+    model = Run
+    fields = ['task', 'start', 'finish']
+    template_name = "tasks/task_run_create.html"
+    success_url = reverse_lazy("tasks:run_create")
+    success_message = _("task started at %(start)s was created successfully")
+
+    #def get_context_data(self, **kwargs):
+    #    kwargs['task_list'] = Task.objects.annotate(
+    #                            Count('run')).order_by('-id')[:5]
+    #    return super().get_context_data(**kwargs)  # Python3 style super
