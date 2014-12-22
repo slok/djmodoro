@@ -1,0 +1,47 @@
+{# tasks/task_run_list #}
+{% extends "tasks/base_tasks.html" %}
+{% load i18n %}
+
+is_paginated, page_obj, and paginator
+
+{% block container %}
+
+<h2>{% trans "Run history" %}</h2>
+
+{% if run_list %}
+    <table class="table table-striped">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>{% trans "Task name" %}</th>
+          <th>{% trans "Start" %}</th>
+          <th>{% trans "Finish" %}</th>
+        </tr>
+      </thead>
+        {% for run in run_list %}
+            <tr>
+                <td>{{ run.id }}</td>
+                <td>{{ run.task }}</td>
+                <td>{{ run.start }}</td>
+                <td>{{ run.finish }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No cars found!!! :(</p>
+{% endif %}
+{% if is_paginated %}
+    <nav>
+      <ul class="pager">
+        {% if page_obj.has_previous %}
+            <li><a href="{% url "tasks:run_list" %}?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <li><a href="{% url "tasks:run_list" %}?page={{ page_obj.next_page_number }}">next</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+{% endif %}
+
+{% endblock container %}

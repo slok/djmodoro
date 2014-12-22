@@ -32,13 +32,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Djomodoro</a>
+          <a class="navbar-brand" href="{% url 'tasks:index' %}">Djomodoro</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="{% url 'tasks:index' %}">{% trans "home" %}</a></li>
             <li><a href="{% url 'tasks:task_create' %}">{% trans "Tasks" %}</a></li>
-            <li><a href="#contact">{% trans "History" %}</a></li>
+            <li><a href="{% url 'tasks:run_list' %}">{% trans "History" %}</a></li>
             <li><a href="#about">{% trans "About" %}</a></li>
           </ul>
         </div><!--/.nav-collapse -->

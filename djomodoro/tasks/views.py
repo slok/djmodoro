@@ -1,4 +1,5 @@
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.list import ListView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
 from django.http import JsonResponse
@@ -45,6 +46,13 @@ class UpdateRunView(AjaxableResponseMixin, UpdateView):
         return reverse_lazy("tasks:run_update", kwargs=self.kwargs)
 
 
+class RunListView(ListView):
+    queryset = Run.objects.order_by('-id')
+    template_name = "tasks/task_run_list.html"
+    context_object_name = "run_list"
+    paginate_by = 10
+
+
 class NewTaskView(SuccessMessageMixin, CreateView):
     model = Task
     fields = ['name', 'description']
@@ -57,10 +65,11 @@ class NewTaskView(SuccessMessageMixin, CreateView):
             Count('run')).order_by('-id')[:5]
         return super().get_context_data(**kwargs)  # Python3 style super
 
-
-class NewRunView(SuccessMessageMixin, CreateView):
-    model = Run
-    fields = ['task', 'start', 'finish']
-    template_name = "tasks/task_run_create.html"
-    success_url = reverse_lazy("tasks:run_create")
-    success_message = _("task started at %(start)s was created successfully")
+#
+#class NewRunView(SuccessMessageMixin, CreateView):
+#    model = Run
+#    fields = ['task', 'start', 'finish']
+#    template_name = "tasks/task_run_create.html"
+#    success_url = reverse_lazy("tasks:run_create")
+#    success_message = _("task started at %(start)s was created successfully")
+#
