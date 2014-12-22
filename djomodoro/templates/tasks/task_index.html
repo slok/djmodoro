@@ -3,15 +3,59 @@
 
 
 {% block container %}
-<h1 id="clock"></h1>
+
+<div class="row">
+  <div class="col-md-2 col-md-offset-5">
+    <h1 id="clock"></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-2 col-md-offset-5">
+    <button id="start-counter" type="button" class="btn btn-primary btn-lg">Start!</button>
+  </div>
+</div>
+
+
 <script type="text/javascript">
+
+function newClock(){
   var today = new Date();
   today.setMinutes(today.getMinutes() + 25);
   $("#clock")
   .countdown(today, function(event) {
     $(this).text(
-      event.strftime('%D days %H:%M:%S')
+      event.strftime('%M:%S')
     );
   });
+  //$("#clock").countdown('stop');
+}
+
+//Button click handler
+$( "#start-counter" ).click(function() {
+  newClock()
+  var today = new Date();
+  $("#clock").countdown('start');
+  $("#start-counter").prop('disabled', true);
+  $("#start-counter").text('work!');
+
+  // Send ajax request
+  $("#idForm").submit(function() {
+
+    var url = "path/to/your/script.php"; // the script where you handle the form input.
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: $("#idForm").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+               alert(data); // show response from the php script.
+           }
+         });
+
+    return false; // avoid to execute the actual submit of the form.
+});
+
+});
 </script>
 {% endblock container %}
