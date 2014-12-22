@@ -20,7 +20,7 @@ class Run(models.Model):
     finish = models.DateTimeField(_("Task finish time"), null=True)
 
     def clean(self):
-        if self.start > self.finish:
+        if self.finish and self.start > self.finish:
             raise ValidationError(
                 {'finish': _('Finish time should be older than start time')}
             )
