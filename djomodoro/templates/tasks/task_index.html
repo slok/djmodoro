@@ -50,17 +50,17 @@ var finished = null;
 function newClock(){
   var today = new Date();
   //today.setMinutes(today.getMinutes() + 1);
-  today.setSeconds(today.getSeconds() + 3);
+  today.setSeconds(today.getSeconds() + 10);
 
   //FIX
-  start = moment.utc();
+  started = moment.utc();
 
   $("#clock").countdown(today, function(event) {
     $(this).text(
       event.strftime('%M:%S')
     );
   }).on('finish.countdown', function(event) {
-    finish = moment.utc();
+    finished = moment.utc();
     // Submit the form
     update_run();
     $("#task-form-update").submit();
@@ -91,7 +91,6 @@ $( "#start-counter" ).click(function() {
 // functions
 function create_run(){
   $("#task-form").submit(function(event) {
-    started = moment.utc()
     // Add new values to the form
     $('<input />').attr('type', 'hidden')
           .attr('name', "start")
@@ -128,22 +127,19 @@ function update_run(){
 
     $('<input />').attr('type', 'hidden')
           .attr('name', "start")
-          .attr('value', start.format("YYYY-M-DD HH:mm:ss"))
+          .attr('value', started.format("YYYY-M-DD HH:mm:ss"))
           .appendTo('#task-form-update');
 
     $('<input />').attr('type', 'hidden')
           .attr('name', "finish")
-          .attr('value', finish.format("YYYY-M-DD HH:mm:ss"))
+          .attr('value', finished.format("YYYY-M-DD HH:mm:ss"))
           .appendTo('#task-form-update');
 
     // Ajax request
     $.ajax({
       type: $("#task-form-update").attr('method'),
-      url: $("#task-form-update").attr('action') + "/" + $( "#id_task" ).val(),
+      url: $("#task-form-update").attr('action') + "/" + selectedObject,
       data: $("#task-form-update").serialize(), // serializes the form's elements.
-      success: function(data){
-        alert(data);
-      },
       fail: function(data){
         alert("Something failed!");
       }

@@ -22,8 +22,8 @@ is_paginated, page_obj, and paginator
             <tr>
                 <td>{{ run.id }}</td>
                 <td>{{ run.task }}</td>
-                <td>{{ run.start }}</td>
-                <td>{{ run.finish }}</td>
+                <td>{{ run.start|date:"c" }}</td>
+                <td>{{ run.finish|date:"c" }}</td>
             </tr>
         {% endfor %}
     </table>

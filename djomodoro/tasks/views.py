@@ -34,7 +34,7 @@ class IndexView(AjaxableResponseMixin, CreateView):
     model = Run
     fields = ['task', 'start']
     template_name = "tasks/task_index.html"
-    success_url = reverse_lazy("tasks:run_create")
+    success_url = reverse_lazy("tasks:index")
 
 
 class UpdateRunView(AjaxableResponseMixin, UpdateView):
