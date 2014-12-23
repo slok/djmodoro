@@ -4,6 +4,12 @@
 
 
 {% block container %}
+
+<div class="progress">
+  <div id='progress-bar' class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-2 col-md-offset-5">
     <form id="task-form" action="{% url 'tasks:index' %}" method="post">
@@ -44,6 +50,7 @@
 
 var selectedObject = null; // This will be the object to update when finished
 var started = null;
+var shouldFinish = null;
 var finished = null;
 var firstTime = true;
 
@@ -57,34 +64,44 @@ create_run();
 update_run();
 
 function newClock(){
-  var today = new Date();
-  //today.setMinutes(today.getMinutes() + 1);
-  today.setSeconds(today.getSeconds() + 10);
 
-  //FIX
   started = moment.utc();
+  //shouldFinish = started.clone().add(25, 'minutes');
+  shouldFinish = started.clone().add(50, 'seconds');
 
+  // Create the progress bar
+  $('#progress-bar').attr('aria-valuemin', started.unix())
+  $('#progress-bar').attr('aria-valuemax', shouldFinish.unix())
+
+  // Set the events for the counter
   if (firstTime){
-
-      $("#clock").countdown(today, function(event) {
+      $("#clock").countdown(shouldFinish.toDate(), function(event) {
         $(this).text(
           event.strftime('%M:%S')
-        );}).on('finish.countdown', function(event) {
-        finished = moment.utc();
+        );}).on('update.countdown', function(event) {
+            // Update the progress bar
+            $('#progress-bar').attr('aria-valuenow', moment.utc().unix());
 
-        // Update the object
-        $("#task-form-update").submit();
+            var totalSecondsToFinish = shouldFinish.unix() - started.unix();
+            var secondsNow = totalSecondsToFinish - (shouldFinish.unix() - moment.utc().unix());
+            var barValue = "width: "  + secondsNow * 100 / totalSecondsToFinish + "%";
+            $('#progress-bar').attr('style', barValue);
+        }).on('finish.countdown', function(event) {
+            finished = moment.utc();
 
-        // Show the alert
-        alert("Time to rest!")
+            // Update the object
+            $("#task-form-update").submit();
 
-        // Enable for another run
-        $("#start-counter").prop('disabled', false);
-        $("#start-counter").text('Start!');
-      });
+            // Show the alert
+            alert("Time to rest!")
+
+            // Enable for another run
+            $("#start-counter").prop('disabled', false);
+            $("#start-counter").text('Start!');
+        });
       firstTime = false;
   } else{
-    $('#clock').countdown(today);
+    $('#clock').countdown(shouldFinish.toDate());
   }
 }
 
