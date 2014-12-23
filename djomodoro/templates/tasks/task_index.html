@@ -45,7 +45,16 @@
 var selectedObject = null; // This will be the object to update when finished
 var started = null;
 var finished = null;
+var firstTime = true;
 
+// Ask before leaving
+$(window).on('beforeunload', function(){
+  return 'Are you sure you want to leave?';
+});
+
+// Prepare the form events
+create_run();
+update_run();
 
 function newClock(){
   var today = new Date();
@@ -55,16 +64,28 @@ function newClock(){
   //FIX
   started = moment.utc();
 
-  $("#clock").countdown(today, function(event) {
-    $(this).text(
-      event.strftime('%M:%S')
-    );
-  }).on('finish.countdown', function(event) {
-    finished = moment.utc();
-    // Submit the form
-    update_run();
-    $("#task-form-update").submit();
-  });
+  if (firstTime){
+
+      $("#clock").countdown(today, function(event) {
+        $(this).text(
+          event.strftime('%M:%S')
+        );}).on('finish.countdown', function(event) {
+        finished = moment.utc();
+
+        // Update the object
+        $("#task-form-update").submit();
+
+        // Show the alert
+        alert("Time to rest!")
+
+        // Enable for another run
+        $("#start-counter").prop('disabled', false);
+        $("#start-counter").text('Start!');
+      });
+      firstTime = false;
+  } else{
+    $('#clock').countdown(today);
+  }
 }
 
 //Button click handler
@@ -77,13 +98,6 @@ $( "#start-counter" ).click(function() {
   $("#start-counter").prop('disabled', true);
   $("#start-counter").text('work!');
 
-  // Ask before leaving
-  $(window).on('beforeunload', function(){
-      return 'Are you sure you want to leave?';
-  });
-
-  // Submit the form
-  create_run();
   $("#task-form").submit();
 
 });
