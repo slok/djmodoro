@@ -28,7 +28,7 @@ is_paginated, page_obj, and paginator
         {% endfor %}
     </table>
 {% else %}
-    <p>No cars found!!! :(</p>
+    <p>{% trans "No runs" %}</p>
 {% endif %}
 {% if is_paginated %}
     <nav>
@@ -41,7 +41,6 @@ is_paginated, page_obj, and paginator
         {% endif %}
       </ul>
     </nav>
-
 {% endif %}
 
 {% endblock container %}

@@ -1,5 +1,6 @@
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
 from django.http import JsonResponse
@@ -64,6 +65,35 @@ class NewTaskView(SuccessMessageMixin, CreateView):
         kwargs['task_list'] = Task.objects.annotate(
             Count('run')).order_by('-id')[:5]
         return super().get_context_data(**kwargs)  # Python3 style super
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = "tasks/task_task_detail.html"
+    context_object_name = "task_object"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginate_by = self.__class__.paginate_by
+        # Add our custom paginator
+        page = int(self.request.GET.get('page', 1))
+
+        run_list_count = Run.objects.filter(task_id=self.kwargs['pk']).count()
+        context['run_list'] = Run.objects.filter(
+            task_id=self.kwargs['pk'])[(page-1)*paginate_by:page*paginate_by]
+
+        context['is_paginated'] = run_list_count > 0
+        if context['is_paginated']:
+            page_obj = {
+                'has_previous': page > 1,
+                'has_next': (run_list_count - (page * paginate_by)) > 0,
+                'previous_page_number': page - 1,
+                'next_page_number': page + 1,
+            }
+            context['page_obj'] = page_obj
+        return context
+
 
 #
 #class NewRunView(SuccessMessageMixin, CreateView):

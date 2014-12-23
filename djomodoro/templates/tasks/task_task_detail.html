@@ -1,0 +1,50 @@
+{# tasks/task_task_detail #}
+{% extends "tasks/base_tasks.html" %}
+{% load i18n %}
+
+is_paginated, page_obj, and paginator
+
+{% block container %}
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h1>{{ task_object.name }}</h1>
+        <h4>{{ task_object.description }}</h4>
+      <table class="table table-striped">
+      <thead>
+            <tr>
+              <th>{% trans "Id" %}</th>
+              <th>{% trans "Start" %}</th>
+              <th>{% trans "Finish" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for i in run_list %}
+            <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.start }}</td>
+                <td>{{ i.finish }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+     </table>
+    </div>
+  </div>
+  {% if is_paginated %}
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <nav>
+        <ul class="pager">
+          {% if page_obj.has_previous %}
+              <li><a href="{% url "tasks:task_detail" task_object.id %}?page={{ page_obj.previous_page_number }}">Previous</a></li>
+          {% endif %}
+          {% if page_obj.has_next %}
+              <li><a href="{% url "tasks:task_detail" task_object.id %}?page={{ page_obj.next_page_number }}">next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock container %}
