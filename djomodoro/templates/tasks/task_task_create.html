@@ -27,6 +27,7 @@
           <th>{% trans "Name" %}</th>
           <th>{% trans "Description" %}</th>
           <th>{% trans "Runs" %}</th>
+          <th>{% trans "Details" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,6 +36,13 @@
             <td>{{ i.name }}</td>
             <td>{{ i.description }}</td>
             <td>{{ i.run__count }}</td>
+            <td>
+                <a href="{% url 'tasks:task_detail' i.id %}">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true">
+
+                </span>
+                </a>
+            </td>
         </tr>
       {% endfor %}
       </tbody>
