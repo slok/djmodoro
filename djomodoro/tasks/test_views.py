@@ -1,5 +1,4 @@
 from datetime import timedelta
-import math
 
 from django.test import Client
 from django.test import TestCase
@@ -118,11 +117,66 @@ class TestTasks(TestCase):
                 self.assertEqual(list_count, runs_quantity % paginate_by)
                 break
 
-#class TestTasks(TestCase):
-#        def test_index_200():
-#            c = Client()
-#            response = c.post('/login/', {'username': 'john', 'password': 'smith'})
-#            response.status_code
-#
-#            response = c.get('/customer/details/')
-#            response.content
+
+@override_settings(DEBUG=True)
+class TestRuns(TestCase):
+
+    def setUp(self):
+        self.tasks = (
+            {
+                'name': "Task one",
+                'description': "Do task one"
+            },
+            {
+                'name': "Task two",
+                'description': "Do task two"
+            }
+        )
+
+        self.runs = (
+            {
+                "task_id": 1,
+                "start": timezone.now() - timedelta(hours=2),
+                "finish": timezone.now() + timedelta(hours=2)
+            },
+            {
+                "task_id": 2,
+                "start": timezone.now() - timedelta(minutes=34),
+                "finish": timezone.now() + timedelta(minutes=1)
+            },
+            {
+                "task_id": 2,
+                "start": timezone.now() - timedelta(seconds=14),
+                "finish": timezone.now() + timedelta(minutes=43)
+            },
+            {
+                "task_id": 2,
+                "start": timezone.now() - timedelta(minutes=3),
+                "finish": timezone.now() + timedelta(hours=2)
+            },
+        )
+
+    def test_create_run(self):
+        url = reverse("tasks:index")
+        c = Client()
+
+        for i in self.tasks:
+            t = Task(name=['name'], description=i['description'])
+            t.save()
+
+        for i in self.runs:
+            post_data = {
+                'task': i['task_id'],
+                'start': i['start'],
+                'finish': i['finish'],
+            }
+            t = Task.objects.get(id=i['task_id'])
+            response = c.post(url, post_data)
+            self.assertEqual(response.status_code, 200)
+            print(response.request['wsgi.input'].read())
+            self.assertEqual(
+                Run.objects.filter(
+                    start=i['start'],
+                    task=t)[0].finish, i['finish'])
+
+        self.assertEqual(Run.objects.count(), len(self.runs))
