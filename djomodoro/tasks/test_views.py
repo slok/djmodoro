@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.template.defaultfilters import date
 
 from .models import Task, Run
+from .views import RunListView, TaskDetailView
 
 
 @override_settings(DEBUG=True)  # For the static ones
@@ -92,7 +93,7 @@ class TestTasks(TestCase):
 
         # Populate database
         runs_quantity = 23
-        paginate_by = 10
+        paginate_by = TaskDetailView.paginate_by
 
         t = Task(name="pagination task", description="pagination task desc")
         t.save()
@@ -207,7 +208,7 @@ class TestRuns(TestCase):
         c = Client()
         url_fmt = "{0}?page={1}"
         runs_quantity = 23
-        paginate_by = 10
+        paginate_by = RunListView.paginate_by
 
         t = Task(name="testing...", description="testing............")
         t.save()
