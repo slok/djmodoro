@@ -16,13 +16,20 @@
         {% csrf_token %}
         <div class="fieldWrapper">
             {{ form.task.errors }}
-            <label for="{{ form.task.id_for_label }}">{% trans "task" %}:</label>
-            {{ form.task }}
+            <div class="row">
+              <div class="col-md-1">
+                <label for="{{ form.task.id_for_label }}">{% trans "task" %}:</label>
+              </div>
+              <div class="col-md-1 col-md-offset-2">
+              {{ form.task }}
+              </div>
+            </div>
         </div>
         <input type="hidden" name="start" />
         <input type="hidden" value="Submit" />
     </form>
   </div>
+
 </div>
 
 <div class="row">
@@ -38,15 +45,19 @@
   </div>
 </div>
 
+  <br/>
 <div class="row">
-  <div class="col-md-2 col-md-offset-5">
-    <h1 id="clock"></h1>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-2 col-md-offset-5">
+  <div class="col-md-1 col-md-offset-5">
     <button id="start-counter" type="button" class="btn btn-primary btn-lg">Start!</button>
   </div>
+  <div class="col-md-1">
+    <a type="button" class="btn btn-success btn-lg" href="{% url 'tasks:task_create' %}">{% trans "New task" %}</a>
+  </div>
+<div class="row">
+  <div class="col-md-5 col-md-offset-2">
+    <h1 id="clock" style="font-size: 2000%"></h1>
+  </div>
+</div>
 </div>
 
 
