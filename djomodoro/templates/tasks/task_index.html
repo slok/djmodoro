@@ -19,6 +19,7 @@
             <label for="{{ form.task.id_for_label }}">{% trans "task" %}:</label>
             {{ form.task }}
         </div>
+        <input type="hidden" name="start" />
         <input type="hidden" value="Submit" />
     </form>
   </div>
@@ -29,6 +30,9 @@
   <!-- Hardcoded url becasue ajax update-->
     <form id="task-form-update" action="/t/run/update" method="post">
         {% csrf_token %}
+        <input type="hidden" name="task" />
+        <input type="hidden" name="start" />
+        <input type="hidden" name="finish" />
         <input type="hidden" value="Submit" />
     </form>
   </div>
@@ -66,7 +70,7 @@ update_run();
 function newClock(){
 
   started = moment.utc();
-  shouldFinish = started.clone().add(25, 'minutes');
+  shouldFinish = started.clone().add(1, 'minutes');
 
   // Create the progress bar
   $('#progress-bar').attr('aria-valuemin', started.unix())
@@ -122,11 +126,8 @@ $( "#start-counter" ).click(function() {
 function create_run(){
   $("#task-form").submit(function(event) {
     // Add new values to the form
-    $('<input />').attr('type', 'hidden')
-          .attr('name', "start")
-          .attr('value', started.format("YYYY-M-DD HH:mm:ss"))
-          .appendTo('#task-form');
-
+    $("#task-form").find(
+      'input[name="start"]').val(started.format("YYYY-M-DD HH:mm:ss"))
     // Ajax request
     $.ajax({
       type: $("#task-form").attr('method'),
@@ -150,20 +151,14 @@ function update_run(){
   $("#task-form-update").submit(function(event) {
 
     // Add new values to the form
-    $('<input />').attr('type', 'hidden')
-          .attr('name', "task")
-          .attr('value', $( "#id_task" ).val())
-          .appendTo('#task-form-update');
+    $('#task-form-update').find(
+      'input[name="task"]').val($( "#id_task" ).val())
 
-    $('<input />').attr('type', 'hidden')
-          .attr('name', "start")
-          .attr('value', started.format("YYYY-M-DD HH:mm:ss"))
-          .appendTo('#task-form-update');
+    $('#task-form-update').find(
+      'input[name="start"]').val(started.format("YYYY-M-DD HH:mm:ss"))
 
-    $('<input />').attr('type', 'hidden')
-          .attr('name', "finish")
-          .attr('value', finished.format("YYYY-M-DD HH:mm:ss"))
-          .appendTo('#task-form-update');
+    $('#task-form-update').find(
+      'input[name="finish"]').val(finished.format("YYYY-M-DD HH:mm:ss"))
 
     // Ajax request
     $.ajax({
