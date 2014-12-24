@@ -81,7 +81,7 @@ update_run();
 function newClock(){
 
   started = moment.utc();
-  shouldFinish = started.clone().add(1, 'minutes');
+  shouldFinish = started.clone().add(25, 'minutes');
 
   // Create the progress bar
   $('#progress-bar').attr('aria-valuemin', started.unix())
