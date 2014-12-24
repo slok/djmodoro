@@ -130,5 +130,11 @@ PIPELINE_JS = {
             'bower/moment/moment.js'
         ),
         'output_filename': 'js/libs.min.js',
+    },
+    'djomodoro': {
+        'source_filenames': (
+            'js/counter.js',
+        ),
+        'output_filename': 'js/djomodoro.min.js',
     }
 }

@@ -93,13 +93,3 @@ class TaskDetailView(DetailView):
             }
             context['page_obj'] = page_obj
         return context
-
-
-#
-#class NewRunView(SuccessMessageMixin, CreateView):
-#    model = Run
-#    fields = ['task', 'start', 'finish']
-#    template_name = "tasks/task_run_create.html"
-#    success_url = reverse_lazy("tasks:run_create")
-#    success_message = _("task started at %(start)s was created successfully")
-#
