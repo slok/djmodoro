@@ -18,4 +18,13 @@ Install dependencies:
     $ pip install -r requirements/dev.txt
     $ bower install
 
+Prepare application:
+--------------------
 
+    $ ./manage.py migrate
+    $ ./manage.py loaddata tasks/fixtures/*
+
+Run devserver:
+-------------
+
+    $ ./manage.py runserver
