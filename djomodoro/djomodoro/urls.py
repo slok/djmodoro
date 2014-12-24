@@ -4,8 +4,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from tasks import urls as task_urls
+from . import views
 
 urlpatterns = patterns('',
+    url(r'^$', views.IndexRedirect.as_view(), name='index'),
     url(r'^t/', include(task_urls, namespace="tasks")),
     url(r'^admin/', include(admin.site.urls)),
 )
