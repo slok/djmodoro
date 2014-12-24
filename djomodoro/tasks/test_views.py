@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.utils import timezone
+from django.template.defaultfilters import date
 
 from .models import Task, Run
 
@@ -122,6 +123,7 @@ class TestTasks(TestCase):
 class TestRuns(TestCase):
 
     def setUp(self):
+        self.date_format = "Y-m-d H:i:s"
         self.tasks = (
             {
                 'name': "Task one",
@@ -167,16 +169,65 @@ class TestRuns(TestCase):
         for i in self.runs:
             post_data = {
                 'task': i['task_id'],
-                'start': i['start'],
-                'finish': i['finish'],
+                'start': date(i['start'], self.date_format),
             }
             t = Task.objects.get(id=i['task_id'])
             response = c.post(url, post_data)
-            self.assertEqual(response.status_code, 200)
-            print(response.request['wsgi.input'].read())
-            self.assertEqual(
-                Run.objects.filter(
-                    start=i['start'],
-                    task=t)[0].finish, i['finish'])
+            self.assertEqual(response.status_code, 302)
 
         self.assertEqual(Run.objects.count(), len(self.runs))
+
+    def test_update_run(self):
+        c = Client()
+
+        for i in self.tasks:
+            t = Task(name=['name'], description=i['description'])
+            t.save()
+
+        for i in self.runs:
+            t = Task.objects.get(id=i['task_id'])
+            r = Run(task=t, start=date(i['start'], self.date_format))
+            r.save()
+            self.assertIsNone(r.finish)
+
+            # Test updates
+            post_data = {
+                'task': i['task_id'],
+                'start': date(i['start'], self.date_format),
+                'finish': date(i['finish'], self.date_format)
+            }
+            url = reverse("tasks:run_update", kwargs={"pk": r.id})
+            response = c.post(url, post_data)
+            self.assertEqual(response.status_code, 302)
+            r = Run.objects.get(id=r.id)
+            self.assertEqual(date(r.finish, self.date_format),
+                             date(i['finish'], self.date_format))
+
+    def test_list_run(self):
+        c = Client()
+        url_fmt = "{0}?page={1}"
+        runs_quantity = 23
+        paginate_by = 10
+
+        t = Task(name="testing...", description="testing............")
+        t.save()
+
+        for i in range(runs_quantity):
+            Run(task=t, start=timezone.now(), finish=timezone.now()).save()
+
+        i = 0
+        while True:
+            i += 1
+            url = url_fmt.format(reverse("tasks:run_list"), i)
+
+            response = c.get(url)
+            self.assertEqual(response.status_code, 200)
+
+            if response.context['page_obj'].has_next():
+                self.assertEqual(len(response.context['run_list']),
+                                 paginate_by)
+            else:
+                count = Run.objects.count()
+                self.assertEqual(
+                    len(response.context['run_list']), count % paginate_by)
+                break
